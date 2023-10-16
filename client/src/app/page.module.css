@@ -1,4 +1,80 @@
+/* page.module.css */
+
 .main {
+  text-align: center;
+  padding: 20px;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333; /* Customize the color to your preference */
+}
+
+.description {
+  font-size: 18px;
+  line-height: 1.5;
+  color: #666; /* Customize the color to your preference */
+}
+
+/* Styling for the file input and upload button */
+/* Styling for the file input and upload button */
+
+.label {
+  display: inline-block;
+  grid-auto-flow: column;
+  grid-gap: 0.5em;
+  justify-items: center;
+  align-content: center;
+  color: #007bff;
+  border: 0.2em solid #007bff;
+  background: hsl(0 0 0/0);
+  padding: 10px 20px;
+  color: #007bff;
+  border-radius: 2em;
+  transition: 1s;
+  height: 20px;
+  width: 57px;
+  margin-left: 10px;
+}
+
+.label:hover,
+.label:focus,
+.label:active {
+  background: #007bff;
+  color: #fff;
+}
+
+.inputFile {
+  display: none;
+}
+
+.uploadContainer {
+  margin-top: 20px;
+}
+
+.uploadButton {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.uploadButton:hover {
+  background-color: #0056b3;
+}
+
+/* Hide the input element */
+.uploadButton input {
+  display: none;
+}
+
+/* .main {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -108,7 +184,7 @@
   position: relative;
 }
 /* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
+/* @media (hover: hover) and (pointer: fine) {
   .card:hover {
     background: rgba(var(--card-rgb), 0.1);
     border: 1px solid rgba(var(--card-border-rgb), 0.15);
@@ -126,7 +202,7 @@
 }
 
 /* Mobile */
-@media (max-width: 700px) {
+/* @media (max-width: 700px) {
   .content {
     padding: 4rem;
   }
@@ -200,10 +276,10 @@
     );
     z-index: 1;
   }
-}
+} */
 
 /* Tablet and Smaller Desktop */
-@media (min-width: 701px) and (max-width: 1120px) {
+/* @media (min-width: 701px) and (max-width: 1120px) {
   .grid {
     grid-template-columns: repeat(2, 50%);
   }
@@ -226,4 +302,4 @@
   to {
     transform: rotate(0deg);
   }
-}
+} */

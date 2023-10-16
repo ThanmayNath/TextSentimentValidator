@@ -1,95 +1,91 @@
+// Import necessary modules and styles
+"use client";
+import React, { useState } from "react";
+import Papa, { ParseResult } from "papaparse"; // Import papaparse
 import Image from "next/image";
+import axios from "axios";
 import styles from "./page.module.css";
 
 export default function Home() {
+  const [fileMessage, setFileMessage] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.name.endsWith(".csv")) {
+        Papa.parse(file, {
+          complete: (result: ParseResult) => {
+            if (result.data.length > 1) {
+              const firstRow = result.data[0] as string[]; // Assert the type of the first row
+              if (firstRow.length === 1 && typeof firstRow[0] === "string") {
+                setFileMessage(`File "${file.name}" is a valid CSV file.`);
+                setSelectedFile(file);
+                // You can process the CSV file here or set it in state for further processing.
+              } else {
+                setFileMessage("CSV file should have one column with text.");
+              }
+            } else {
+              setFileMessage("CSV file should have at least one row.");
+            }
+          },
+          header: false, // Don't treat the first row as headers
+        });
+      } else {
+        setFileMessage("Please select a valid CSV file.");
+      }
+    }
+  };
+
+  const handleUpload = () => {
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      axios
+        .post("http://localhost:8800/upload", formData)
+        .then((response) => {
+          console.log("Upload success:", response);
+          // You can handle the response here.
+        })
+        .catch((error) => {
+          console.error("Upload error:", error);
+          // Handle the error here.
+        });
+    } else {
+      setFileMessage("Please select a valid CSV file before uploading.");
+    }
+  };
+
   return (
     <main className={styles.main}>
+      <div className={styles.title}>
+        <h1>Sentiment Analysis Platform for Client Feedback</h1>
+      </div>
       <div className={styles.description}>
         <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
+          The <strong>Sentiment Analysis Platform for Client Feedback</strong>{" "}
+          is a machine learning project designed to empower businesses with the
+          ability to extract valuable insights from their clients' feedback
+          data.
         </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      <div>
+        <label htmlFor="file" className={styles.label}>
+          CSV <ion-icon name="cloud-upload-outline"></ion-icon>
+          <input
+            type="file"
+            id="file"
+            accept=".csv"
+            onChange={handleFileUpload}
+            className={styles.inputFile}
+          />
+        </label>
+        <p>{fileMessage}</p>
       </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      <button className={styles.uploadButton} onClick={handleUpload}>
+        Upload
+      </button>
     </main>
   );
 }
